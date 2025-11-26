@@ -88,6 +88,6 @@ full and grouped numeric calculations
 
 It provides a strong foundation for building more advanced graph-based applications.
 
-Hello, my name is Salih efe Tosunbayraktar. I am a Computer Engineer Student and Im studying in Turkiye/Sivas/Cumhuriyet Univercity.
+Hello, my name is Salih efe Tosunbayraktar. I am a Computer Engineer Student and Im studying in Turkiye/Sivas/Cumhuriyet University.
 This Project i focused on object-oriented programming and data-driven systems.
 I designed a customizable node–connection architecture that supports hierarchical structures, visual connection mapping, and advanced data aggregation.
