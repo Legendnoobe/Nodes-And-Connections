@@ -28,8 +28,11 @@ n0.removeConnection("con1");
 //n8.removeConnection("con9");
     n0.displayConnections();
 
+    n0.printSumByType("A");
+    n0.replaceType("B","A");
+
    n0.printSum();
-   n0.printSumByType();
+   n0.printSumByType("A");
 
 
 

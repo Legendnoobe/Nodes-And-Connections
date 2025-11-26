@@ -32,8 +32,8 @@ public class Node {
     }
 
     public void readNode(){
-        System.out.println("Node Adı:"+nodeName);
-        System.out.println("Node Datası:"+data);
+        System.out.println("Node Name:"+nodeName);
+        System.out.println("Node Data:"+data);
         System.out.println();
     }
     public void displayConnections(){
@@ -49,7 +49,7 @@ public class Node {
         HashSet<Node> visited = new HashSet<>();
         int total = dfsSum(this, visited, 0, true);
         System.out.println();
-        System.out.println("Veriler Toplamı :" + total);
+        System.out.println("Total Value Of Data Sum :" + total);
         System.out.println();
     }
 
@@ -93,7 +93,7 @@ public class Node {
         HashSet<Node> visited = new HashSet<>();
         int total = dfsPrintByType(this, visited, 0, true, targetType);
         System.out.println();
-        System.out.println("Tipi " + targetType + " olan node’ların toplamı: " + total);
+        System.out.println("Total Value Of Data Sum " + total+ " For Type " + targetType);
         System.out.println();
     }
     public void printSumByType() {
@@ -143,12 +143,30 @@ public class Node {
         for (Connection current:list){
             if (current.connectionName==connectionName){
                 list.remove(current);
-                System.out.println("Gerekli Bağlantı Silindi");
+                System.out.println("Required Connection Deleted");
                 break;
             }
-            System.out.println("Silinecek Bağlantı Bulunamadı");
+            System.out.println("No Conncetion Found to Delete");
         }
 
+    }
+
+    public void replaceTypeForAll(String fromType, String toType) {
+        java.util.HashSet<Node> visited = new java.util.HashSet<>();
+        dfsReplaceType(this, visited, fromType, toType);
+    }
+
+    private void dfsReplaceType(Node node, java.util.HashSet<Node> visited, String fromType, String toType) {
+        if (node == null || visited.contains(node)) return;
+        visited.add(node);
+        if (node.type != null && node.type.equals(fromType)) {
+            node.type = toType;
+        }
+        if (node.list != null) {
+            for (Connection c : node.list) {
+                dfsReplaceType(c.connectedTo, visited, fromType, toType);
+            }
+        }
     }
 
 
