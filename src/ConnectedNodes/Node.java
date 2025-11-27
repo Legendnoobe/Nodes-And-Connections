@@ -16,7 +16,6 @@ public class Node {
         this.type = type;
     }
 
-    // Önceki constructor’ı koruyabilirsin
     public Node(int data, String nodeName) {
         this(data, nodeName, "default");
     }
@@ -44,7 +43,7 @@ public class Node {
         }
         System.out.println();
     }
-    // Toplam ve yazdırma metodları
+
     public void printSum() {
         HashSet<Node> visited = new HashSet<>();
         int total = dfsSum(this, visited, 0, true);
