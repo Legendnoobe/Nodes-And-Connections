@@ -2,6 +2,9 @@ package ConnectedNodes;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
+
+import static ConnectedNodes.NodeManager.*;
 
 public class Node {
     public ArrayList<Connection> list;
@@ -30,6 +33,18 @@ public class Node {
             list.add(newConnection);
     }
 
+    public void addNode(int data,String localNodeName){
+        Node newNode = new Node(data,localNodeName);
+        createConnection(nodeName+"-"+localNodeName,newNode);
+        displayConnections();
+    }
+    public void addNode(int data,String localNodeName,String type){
+        Node newNode = new Node(data,localNodeName,type);
+        createConnection(nodeName+"-"+localNodeName,newNode);
+        displayConnections();
+    }
+
+
     public void readNode(){
         System.out.println("Node Name:"+nodeName);
         System.out.println("Node Data:"+data);
@@ -44,103 +59,50 @@ public class Node {
         System.out.println();
     }
 
+    public Node findNode(String targetName) {
+        return findNodeDFS(this, targetName, new HashSet<>());
+    }
+
+
+
     public void printSum() {
+        System.out.println();
+        System.out.println("Total Value Of Data Sum :" +returnSum());
+        System.out.println();
+    }
+    public int returnSum() {
         HashSet<Node> visited = new HashSet<>();
-        int total = dfsSum(this, visited, 0, true);
-        System.out.println();
-        System.out.println("Total Value Of Data Sum :" + total);
-        System.out.println();
+        return dfsSum(this, visited, 0, true);
     }
 
-    private int dfsSum(Node node, HashSet<Node> visited, int depth, boolean isStart) {
-        if (node == null || visited.contains(node)) return 0;
-
-        visited.add(node);
-        printNodeLine(node, depth, isStart);
 
 
-        int sum = node.data;
-
-        if (node.list != null && !node.list.isEmpty()) {
-            for (Connection conn : node.list) {
-                Node child = conn.connectedTo;
-                sum += dfsSum(child, visited, depth + 1, false);
-            }
-        }
-
-        return sum;
-    }
-
-    private void printNodeLine(Node node, int depth, boolean isStart) {
-        if (isStart) {
-            System.out.println("Start " + node.nodeName + " (data=" + node.data + ")");
-            return;
-        }
-
-        if (depth == 1) {
-            // Start'ın doğrudan çocukları → her zaman flat, indent yok
-            System.out.println(node.nodeName + " (data=" + node.data + ")");
-            return;
-        }
-
-        // depth >= 2 → hiyerarşik zincir node’lar
-        String indent = "  ".repeat(depth - 1);
-        System.out.println(indent + "└─ " + node.nodeName + " (data=" + node.data + ")");
-    }
 
     public void printSumByType(String targetType) {
+        System.out.println();
+        System.out.println("Total Value Of Data Sum " + returnSumByType()+ " For Type " + targetType);
+        System.out.println();
+    }
+    public int returnSumByType(String targetType) {
         HashSet<Node> visited = new HashSet<>();
-        int total = dfsPrintByType(this, visited, 0, true, targetType);
-        System.out.println();
-        System.out.println("Total Value Of Data Sum " + total+ " For Type " + targetType);
-        System.out.println();
+        return dfsPrintByType(this, visited, 0, true, targetType);
+
     }
     public void printSumByType() {
         printSumByType("default"); // default tipi burada belirledik
     }
+    public int returnSumByType() {
+        HashSet<Node> visited = new HashSet<>();
+        return dfsPrintByType(this, visited, 0, true, "default");
 
-    private int dfsPrintByType(Node node, HashSet<Node> visited, int depth, boolean isStart, String targetType) {
-        if (node == null || visited.contains(node)) return 0;
-
-        visited.add(node);
-
-        int sum = 0;
-
-        // Tipi eşleşen node'ları yazdır
-        if (node.type.equals(targetType)) {
-            printNodeLineByType(node, depth, isStart);
-            sum += node.data;
-        }
-
-        if (node.list != null && !node.list.isEmpty()) {
-            for (Connection conn : node.list) {
-                sum += dfsPrintByType(conn.connectedTo, visited, depth + 1, false, targetType);
-            }
-        }
-
-        return sum;
     }
 
-    private void printNodeLineByType(Node node, int depth, boolean isStart) {
-        if (isStart) {
-            System.out.println("Start " + node.nodeName + " (data=" + node.data + ")");
-            return;
-        }
 
-        if (depth == 1) {
-            // Start çocukları → flat yaz
-            System.out.println(node.nodeName + " (data=" + node.data + ")");
-            return;
-        }
 
-        // depth >=2 → hiyerarşik zincir
-        String indent = "  ".repeat(depth - 1);
-        System.out.println(indent + "└─ " + node.nodeName + " (data=" + node.data + ")");
-    }
 
     public void removeConnection(String connectionName){
         for (Connection current:list){
-            if (current.connectionName==connectionName){
+            if (Objects.equals(current.connectionName, connectionName)){
                 list.remove(current);
                 System.out.println("Required Connection Deleted");
                 break;
@@ -155,18 +117,6 @@ public class Node {
         dfsReplaceType(this, visited, fromType, toType);
     }
 
-    private void dfsReplaceType(Node node, java.util.HashSet<Node> visited, String fromType, String toType) {
-        if (node == null || visited.contains(node)) return;
-        visited.add(node);
-        if (node.type != null && node.type.equals(fromType)) {
-            node.type = toType;
-        }
-        if (node.list != null) {
-            for (Connection c : node.list) {
-                dfsReplaceType(c.connectedTo, visited, fromType, toType);
-            }
-        }
-    }
 
 
 

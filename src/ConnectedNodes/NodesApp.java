@@ -22,7 +22,7 @@ public class NodesApp {
         Node6.createConnection("c8",Node7);
         Node6.createConnection("c9",Node9);
 
-        Node0.displayConnections();
+        Node0.addNode(101,"Node101");
 
         Node0.printSum();
         Node0.printSumByType("A");
@@ -30,6 +30,8 @@ public class NodesApp {
         Node0.replaceTypeForAll("C","A");
 
         Node0.printSumByType("A");
+
+        Node0.findNode("Node101").readNode();
 
 
 
