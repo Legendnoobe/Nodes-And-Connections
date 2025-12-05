@@ -14,10 +14,5 @@ public class WireNode extends Node {
     public WireNode(int data, String nodeName) {
         super(data, nodeName);
     }
-
-    public void sendPulse() {
-        sendPulseInternal(this, new HashSet<>());
-    }
-
 }
 

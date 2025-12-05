@@ -3,35 +3,45 @@ package ConnectedNodes;
 public class NodesApp {
 
     public static void main(String[] args) {
-        Node Node0 = new Node(35,"Node0","A");
-        Node Node1 = new Node(8,"Node1","B");
-        Node Node2 = new Node(1,"Node2","A");
-        Node Node3 = new Node(81,"Node3","B");
-        Node Node5 = new Node(28,"Node5","C");
-        Node Node6 = new Node(3,"Node6");
-        Node Node7 = new Node(5,"Node7");
-        Node Node9 = new Node(44,"Node9","C");
+       Node n0 = new Node(30,"n0","A");
+       Node n1 = new Node(5,"n1","B");
+       Node n2 = new Node(110,"n2","A");
+       Node n3 = new Node(12,"n3","C");
+       Node n4 = new Node(30,"n4","A");
+       Node n5 = new Node(44,"n5");
+       Node n6 = new Node(85,"n6");
+       Node n7 = new Node(90,"n7","C");
 
-        Node0.createConnection("c1",Node1);
-        Node0.createConnection("c2",Node2);
-        Node0.createConnection("c3",Node3);
-        Node2.createConnection("c4",Node3);
-        Node3.createConnection("c5",Node5);
-        Node5.createConnection("c6",Node1);
-        Node5.createConnection("c7",Node6);
-        Node6.createConnection("c8",Node7);
-        Node6.createConnection("c9",Node9);
+       n0.createConnection("c0",n1,12);
+       n0.createConnection("c3",n3,30);
+       n0.createConnection("c4",n4,40);
+       n1.createConnection("c2",n2,25);
+       n2.createConnection("c6",n6,8);
+       n2.createConnection("c33",n3,5);
+       n3.createConnection("c5",n5,5);
+       n4.createConnection("c77",n5,15);
+       n4.createConnection("c55",n5,22);
+       n5.createConnection("c66",n6,3);
+       n5.createConnection("c7",n7,7);
+       n6.createConnection("c777",n7,15);
+       n3.createConnection("c444",n4,1);
+       n4.createConnection("c7777",n7,10);
 
-        Node0.addNode(101,"Node101");
+       NodeManager.printShortestPath(n0,n7);
 
-        Node0.printSum();
-        Node0.printSumByType("A");
+       n0.printSumByType("D");
 
-        Node0.replaceTypeForAll("C","A");
 
-        Node0.printSumByType("A");
+       WireNode wn0 = new WireNode(12,"wn0");
+       WireNode wn1 = new WireNode(12,"wn1");
+       WireNode wn2 = new WireNode(12,"wn2");
 
-        Node0.findNode("Node101").readNode();
+       wn0.createConnection("cwn0",wn1);
+       wn0.createConnection("cwn2",wn2);
+       wn1.createConnection("cwn1",wn2);
+
+       NodeManager.sendPulse(wn0);
+
 
 
 

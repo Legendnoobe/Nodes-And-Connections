@@ -1,124 +1,129 @@
 package ConnectedNodes;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Objects;
 
 import static ConnectedNodes.NodeManager.*;
 
 public class Node {
+
     public ArrayList<Connection> list;
     public int data;
     public String nodeName;
     public String type;
-
 
     public Node(int data, String nodeName, String type) {
         this.data = data;
         this.nodeName = nodeName;
         this.type = type;
     }
-
     public Node(int data, String nodeName) {
         this(data, nodeName, "default");
     }
-    public void createConnection(String name,Node node){
 
-        Connection newConnection = new Connection();
-        newConnection.connectedTo = node;
-        newConnection.connectionName=name;
-        if (list==null){
-            list = new ArrayList<>();
-        }
-            list.add(newConnection);
+    public void createConnection(String name, Node node) {
+        if (list == null) list = new ArrayList<>();
+        list.add(new Connection(name, node));
+    }
+    public void createConnection(String name, Node node, int length) {
+        if (list == null) list = new ArrayList<>();
+        list.add(new Connection(name, node, length));
     }
 
-    public void addNode(int data,String localNodeName){
-        Node newNode = new Node(data,localNodeName);
-        createConnection(nodeName+"-"+localNodeName,newNode);
-        displayConnections();
-    }
-    public void addNode(int data,String localNodeName,String type){
-        Node newNode = new Node(data,localNodeName,type);
-        createConnection(nodeName+"-"+localNodeName,newNode);
-        displayConnections();
+    //deafult addNode method
+    public void addNode(int data, String localNodeName, String type, int length) {
+        Node newNode = new Node(data, localNodeName, type);
+        createConnection(childNodeNamer(nodeName, localNodeName), newNode, length);
     }
 
+    //Overloaded addNode methods
+    public void addNode(int data, String localNodeName) {
+        addNode(data, localNodeName, "default", 0);
+    }
+    public void addNode(int data, String localNodeName, int length) {
+        addNode(data, localNodeName, "default", length);
+    }
+    public void addNode(int data, String localNodeName, String type) {
+        addNode(data, localNodeName, type, 0);
+    }
 
-    public void readNode(){
-        System.out.println("Node Name:"+nodeName);
-        System.out.println("Node Data:"+data);
+    //Display Methods
+    public void displayNode() {
+        System.out.println("Node Name: " + nodeName);
+        System.out.println("Node Data: " + data);
         System.out.println();
     }
-    public void displayConnections(){
-        if (!list.isEmpty()) {
-            for (Connection current : list) {
-                System.out.print(current.connectionName+" ");
-            }
+    public void displayConnections() {
+        if (list == null || list.isEmpty()) {
+            System.out.println("No connections.");
+            return;
+        }
+
+        for (Connection current : list) {
+            System.out.print(current.connectionName + " ");
         }
         System.out.println();
     }
 
+    //Find node reference
     public Node findNode(String targetName) {
-        return findNodeDFS(this, targetName, new HashSet<>());
+        return NodeManager.findNode(this, targetName);
     }
 
 
-
+    //Node data collections Total Value
     public void printSum() {
         System.out.println();
-        System.out.println("Total Value Of Data Sum :" +returnSum());
+        System.out.println("Total Value Of Data Sum : " + returnSum());
         System.out.println();
     }
     public int returnSum() {
-        HashSet<Node> visited = new HashSet<>();
-        return dfsSum(this, visited, 0, true);
+        return NodeManager.returnTotalSum(this);
     }
-
-
-
-
     public void printSumByType(String targetType) {
+        int total = returnSumByType(targetType);
         System.out.println();
-        System.out.println("Total Value Of Data Sum " + returnSumByType()+ " For Type " + targetType);
+        System.out.println("Total Value Of Data Sum " + total + " For Type " + targetType);
         System.out.println();
     }
     public int returnSumByType(String targetType) {
-        HashSet<Node> visited = new HashSet<>();
-        return dfsPrintByType(this, visited, 0, true, targetType);
-
+        return NodeManager.returnSumByType(this, targetType);
     }
     public void printSumByType() {
-        printSumByType("default"); // default tipi burada belirledik
+        printSumByType("default");
     }
     public int returnSumByType() {
-        HashSet<Node> visited = new HashSet<>();
-        return dfsPrintByType(this, visited, 0, true, "default");
-
+        return returnSumByType("default");
     }
 
+    //All tree type changer
+    public void replaceTypeForAll(String fromType, String toType) {
+        NodeManager.replaceTypeForAll(this, fromType, toType);
+    }
 
-
-
-    public void removeConnection(String connectionName){
-        for (Connection current:list){
-            if (Objects.equals(current.connectionName, connectionName)){
-                list.remove(current);
-                System.out.println("Required Connection Deleted");
-                break;
-            }
-            System.out.println("No Conncetion Found to Delete");
+    //Remove Methods
+    public void removeConnection(String connectionName) {
+        if (list == null || list.isEmpty()) {
+            System.out.println("No connections to remove.");
+            return;
         }
 
+        boolean removed = list.removeIf(
+                current -> Objects.equals(current.connectionName, connectionName)
+        );
+
+        if (removed)
+            System.out.println("Required Connection Deleted");
+        else
+            System.out.println("No Connection Found To Delete");
     }
-
-    public void replaceTypeForAll(String fromType, String toType) {
-        java.util.HashSet<Node> visited = new java.util.HashSet<>();
-        dfsReplaceType(this, visited, fromType, toType);
+    public void izolateNode(Node target) {
+        NodeManager.deleteNode(this, target);
     }
-
-
-
-
-
+    public void fullDeleteNode(Node target) {
+        izolateNode(target);
+        if (target.list != null) {
+            target.list.clear();
+        }
+    }
 }
